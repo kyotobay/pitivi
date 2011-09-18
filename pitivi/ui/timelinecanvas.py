@@ -342,5 +342,12 @@ class TimelineCanvas(goocanvas.Canvas, Zoomable, Loggable):
         self.height = height
         self._request_size()
 
-    def hide_snap_indicator(self):
-        self._snap_indicator.props.x = -10
+    @handler(timeline, "edge-snapped")
+    def _edgeSnappedCb(self, timeline, edge):
+        """Display or hide a snapping indicator line"""
+        if not edge or edge == 0:
+            self._snap_indicator.props.visibility = goocanvas.ITEM_INVISIBLE
+        else:
+            self._snap_indicator.props.x = Zoomable.nsToPixel(edge)
+            self._snap_indicator.props.height = self.height
+            self._snap_indicator.props.visibility = goocanvas.ITEM_VISIBLE
