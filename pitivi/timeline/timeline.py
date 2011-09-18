@@ -1474,6 +1474,7 @@ class Timeline(Signallable, Loggable):
      - C{track-added} : A L{timeline.Track} was added.
      - C{track-removed} : A L{timeline.Track} was removed.
      - C{selection-changed} : The current selection changed.
+     - C{edge-snapped} : The clip is snapped (or not) to an edge
 
     @ivar tracks: list of Tracks controlled by the Timeline
     @type tracks: List of L{timeline.Track}
@@ -1489,7 +1490,9 @@ class Timeline(Signallable, Loggable):
         'track-added': ['track'],
         'track-removed': ['track'],
         'selection-changed': [],
-        'disable-updates': ['bool']}
+        'disable-updates': ['bool'],
+        'edge-snapped': ["edge"],
+        }
 
     def __init__(self):
         Loggable.__init__(self)
@@ -2026,8 +2029,10 @@ class Timeline(Signallable, Loggable):
         edge, diff = self.edges.snapToEdge(start, end)
 
         if self.dead_band != -1 and diff <= self.dead_band:
+            if edge > 0:
+                self.emit("edge-snapped", edge)
             return edge
-
+        self.emit("edge-snapped", None)
         return start
 
     def disableUpdates(self):

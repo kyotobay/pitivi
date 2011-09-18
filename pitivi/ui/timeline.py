@@ -734,6 +734,14 @@ class Timeline(gtk.Table, Loggable, Zoomable):
         self.split_action.set_sensitive(split)
         self.keyframe_action.set_sensitive(keyframe)
 
+    @handler(timeline, "edge-snapped")
+    def _edgeSnappedCb(self, timeline, edge):
+        """Display or hide a snapping indicator line"""
+        if not edge or edge == 0:
+            print "Reset the snap indicator"
+        else:
+            print "Snapping indicator at", edge
+
 ## ToolBar callbacks
     def _zoomFitCb(self, unused_action):
         self.app.gui.setBestZoomRatio()
