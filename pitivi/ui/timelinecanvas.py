@@ -117,6 +117,10 @@ class TimelineCanvas(goocanvas.Canvas, Zoomable, Loggable):
             stroke_color_rgba=0xFFFFFFFF,
             width=3)
         self._playhead_controller = PlayheadController(self._playhead)
+        self._snap_indicator = goocanvas.Rect(
+            parent=root, x=0, y=0, width=3, line_width=0.5,
+            fill_color_rgba=0x85c0e6FF,
+            stroke_color_rgba=0x294f95FF)
         self.connect("size-allocate", self._size_allocate_cb)
         root.connect("motion-notify-event", self._selectionDrag)
         root.connect("button-press-event", self._selectionStart)
@@ -337,3 +341,6 @@ class TimelineCanvas(goocanvas.Canvas, Zoomable, Loggable):
             height += track.height + TRACK_SPACING
         self.height = height
         self._request_size()
+
+    def hide_snap_indicator(self):
+        self._snap_indicator.props.x = -10

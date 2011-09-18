@@ -738,9 +738,10 @@ class Timeline(gtk.Table, Loggable, Zoomable):
     def _edgeSnappedCb(self, timeline, edge):
         """Display or hide a snapping indicator line"""
         if not edge or edge == 0:
-            print "Reset the snap indicator"
+            self._canvas.hide_snap_indicator()
         else:
-            print "Snapping indicator at", edge
+            self._canvas._snap_indicator.props.x = Zoomable.nsToPixel(edge)
+            self._canvas._snap_indicator.props.height = self._canvas.height
 
 ## ToolBar callbacks
     def _zoomFitCb(self, unused_action):
