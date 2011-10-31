@@ -351,3 +351,8 @@ class TimelineCanvas(goocanvas.Canvas, Zoomable, Loggable):
             self._snap_indicator.props.x = Zoomable.nsToPixel(edge)
             self._snap_indicator.props.height = self.height
             self._snap_indicator.props.visibility = goocanvas.ITEM_VISIBLE
+            self.connect("button-release-event", self._buttonReleaseCb_snap)
+
+    def _buttonReleaseCb_snap(self, widget, event):
+                self._snap_indicator.props.visibility = goocanvas.ITEM_INVISIBLE
+                return False

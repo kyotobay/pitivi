@@ -346,7 +346,7 @@ class Timeline(gtk.Table, Loggable, Zoomable):
             gtk.gdk.ACTION_COPY)
 
         self.connect("drag-data-received", self._dragDataReceivedCb)
-        self.connect("drag-leave", self._dragLeaveCb)
+        self._canvas.connect("drag-leave", self._dragLeaveCb)
         self.connect("drag-drop", self._dragDropCb)
         self.connect("drag-motion", self._dragMotionCb)
         self._canvas.connect("key-press-event", self._keyPressEventCb)
