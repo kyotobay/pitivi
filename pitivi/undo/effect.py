@@ -27,6 +27,7 @@ import gobject
 
 from pitivi.undo.undo import UndoableAction
 from pitivi.effects import PROPS_TO_IGNORE
+from pitivi.utils.timeline import add_effect
 
 
 class EffectPropertyChanged(UndoableAction):
@@ -56,19 +57,10 @@ class EffectGstElementPropertyChangeTracker:
         self.action_log = action_log
         self.pipeline = None
 
-    def addEffectElement(self, gst_element):
-        properties = {}
-
-        if gst_element in self._tracked_effects:
-            return
-
-        for prop in gobject.list_properties(gst_element):
-            gst_element.connect('notify::' + prop.name,
-                                self._propertyChangedCb,
-                                gst_element)
-            if prop.flags & gobject.PARAM_READABLE:
-                properties[prop.name] = gst_element.get_property(prop.name)
-        self._tracked_effects[gst_element] = properties
+    def addEffect(self, tckobj):
+        tckobj.connect('deep-notify', self._propertyChangedCb)
+        self._tracked_effects[tckobj] = [prop.name for prop in \
+                tckobj.list_children_properties()]
 
     def getPropChangedFromTrackObj(self, track_effect):
         prop_changed = []
@@ -89,12 +81,12 @@ class EffectGstElementPropertyChangeTracker:
 
         return prop_changed
 
-    def _propertyChangedCb(self, gst_element, pspec, unused):
-        old_value = self._tracked_effects[gst_element][pspec.name]
+    def _propertyChangedCb(self, tckobj, gst_element, pspec, unused):
+        old_value = self._tracked_effects[tckobj][pspec.name]
         new_value = gst_element.get_property(pspec.name)
-        action = EffectPropertyChanged(gst_element, pspec.name, old_value,
+        action = EffectPropertyChanged(tckobj, pspec.name, old_value,
                                        new_value)
-        self._tracked_effects[gst_element][pspec.name] = new_value
+        self._tracked_effects[tckobj][pspec.name] = new_value
         self.action_log.push(action)
 
 
@@ -109,13 +101,13 @@ class TrackEffectAdded(UndoableAction):
     def __init__(self, timeline_object, track_object, properties_watcher):
         self.timeline_object = timeline_object
         self.track_object = track_object
-        self.factory = track_object.factory
         self.effect_props = []
         self.gnl_obj_props = []
         self._properties_watcher = properties_watcher
         self._props_changed = []
 
     def do(self):
+        add_effect(self.timeline_object, bin_desc, app)
         timeline = self.timeline_object.timeline
         tl_obj_track_obj = timeline.addEffectFactoryOnObject(self.factory,
                                             timeline_objects=[self.timeline_object])
@@ -133,20 +125,19 @@ class TrackEffectAdded(UndoableAction):
         self._done()
 
     def undo(self):
-        element = self.track_object.getElement()
-        props = gobject.list_properties(element)
-        self.effect_props = [(prop.name, element.get_property(prop.name))
-                              for prop in props
-                              if prop.flags & gobject.PARAM_WRITABLE
-                              and prop.name not in PROPS_TO_IGNORE]
-        gnl_props = gobject.list_properties(self.track_object.gnl_object)
-        gnl_obj = self.track_object.gnl_object
+        element = self.track_object.get_element()
+        props = self.track_object.list_children_properties()
+        self_props = [(prop.name, self.track_object.get_child_property(prop.name))
+                              for prop in props]
+        gnl_props = gobject.list_properties(self.track_object.get_gnlobject())
+        gnl_obj = self.track_object.get_gnlobject()
         self.gnl_obj_props = [(prop.name, gnl_obj.get_property(prop.name))
                               for prop in gnl_props
-                              if prop.flags & gobject.PARAM_WRITABLE]
+                              if prop.flags & gobject.PARAM_WRITABLE
+                              and prop.name not in PROPS_TO_IGNORE]
 
-        self.timeline_object.removeTrackObject(self.track_object)
-        self.track_object.track.removeTrackObject(self.track_object)
+        self.timeline_object.release_track_object(self.track_object)
+        self.track_object.get_track().remove_object(self.track_object)
         self._props_changed =\
             self._properties_watcher.getPropChangedFromTrackObj(self.track_object)
         del self.track_object

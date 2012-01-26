@@ -39,6 +39,7 @@ from pitivi.utils.ui import EFFECT_TUPLE
 from pitivi.utils.loggable import Loggable
 from pitivi.utils.ui import PADDING, SPACING
 from pitivi.utils.widgets import GstElementSettingsWidget
+from pitivi.utils.timeline import add_effect
 
 from pitivi.effects import AUDIO_EFFECT, VIDEO_EFFECT, HIDDEN_EFFECTS, \
     EffectsPropertiesManager
@@ -340,22 +341,9 @@ class EffectProperties(gtk.Expander, gtk.HBox):
 
             # Checking that this effect can be applied on this track object
             # Which means, it has the corresponding media_type
-            for tckobj in tlobj.get_track_objects():
-                track = tckobj.get_track()
-                if track.props.track_type == ges.TRACK_TYPE_AUDIO and \
-                        media_type == AUDIO_EFFECT or \
-                        track.props.track_type == ges.TRACK_TYPE_VIDEO and \
-                        media_type == VIDEO_EFFECT:
-                    #Actually add the effect
-                    self.app.action_log.begin("add effect")
-                    effect = ges.TrackParseLaunchEffect(bin_desc)
-                    tlobj.add_track_object(effect)
-                    track.add_object(effect)
-                    self._updateAll()
-                    self.app.action_log.commit()
-                    self._seeker.flush()
-
-                    break
+            add_effect(tlobj, bin_desc, self.app)
+            self._updateAll()
+            self._seeker.flush()
 
     def _dragDataReceivedCb(self, unused_layout, context, unused_x, unused_y,
             selection, unused_targetType, unused_timestamp):
