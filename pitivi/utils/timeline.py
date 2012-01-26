@@ -29,6 +29,7 @@ from pitivi.utils.loggable import Loggable
 from pitivi.utils.signal import Signallable
 from pitivi.utils.receiver import receiver, handler
 from pitivi.utils.ui import Point
+from pitivi.effects import AUDIO_EFFECT, VIDEO_EFFECT
 
 #from pitivi.utils.align import AutoAligner
 
@@ -251,7 +252,6 @@ class Selection(Signallable):
         Add the given timeline_object to the selection.
 
         @param timeline_object: The object to add
-        @type timeline_object: L{ges.TimelineObject}
         @raises TimelineError: If the object is already controlled by this
         Selection.
         """
@@ -1161,6 +1161,26 @@ class Controller(Loggable):
 
     def hover(self, item, target, event):
         pass
+
+
+def add_effect(tlobj, bin_desc, app):
+    media_type = app.effects.getFactoryFromName(bin_desc).media_type
+
+    # Checking that this effect can be applied on this track object
+    # Which means, it has the corresponding media_type
+    for tckobj in tlobj.get_track_objects():
+        track = tckobj.get_track()
+        if track.props.track_type == ges.TRACK_TYPE_AUDIO and \
+            media_type == AUDIO_EFFECT or \
+                track.props.track_type == ges.TRACK_TYPE_VIDEO and      \
+            media_type == VIDEO_EFFECT:
+            #Actually add the effect
+            app.action_log.begin("add effect")
+            effect = ges.TrackParseLaunchEffect(bin_desc)
+            track.add_object(effect)
+            tlobj.add_track_object(effect)
+            app.action_log.commit()
+            break
 
 
 class View(object):

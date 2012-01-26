@@ -233,6 +233,8 @@ class TimelineLogObserver(object):
 
     def startObserving(self, timeline):
         self._connectToTimeline(timeline)
+        timeline.connect("layer-added", self._layerAddedCb)
+        timeline.connect("layer-removed", self._layerRemovedCb)
         for layer in timeline.get_layers():
             for timeline_object in layer.get_objects():
                 self._connectToTimelineObject(timeline_object)
@@ -257,6 +259,7 @@ class TimelineLogObserver(object):
 
     def _connectToTimelineObject(self, timeline_object):
         tracker = TimelineObjectPropertyChangeTracker()
+        tracker.connectToObject(timeline_object)
         for property_name in tracker.property_names:
             tracker.connect("notify::" + property_name,
                     self._timelineObjectPropertyChangedCb, property_name)
@@ -264,8 +267,8 @@ class TimelineLogObserver(object):
 
         timeline_object.connect("track-object-added", self._timelineObjectTrackObjectAddedCb)
         timeline_object.connect("track-object-removed", self._timelineObjectTrackObjectRemovedCb)
-        track_object.connect("effect-added", self._effectAddedCb)
-        track_object.connect("effect-removed", self._effectRemovedCb)
+        timeline_object.connect("effect-added", self._effectAddedCb)
+        timeline_object.connect("effect-removed", self._effectRemovedCb)
         for obj in timeline_object.get_track_objects():
             self._connectToTrackObject(obj)
 
@@ -278,38 +281,36 @@ class TimelineLogObserver(object):
         #for prop, interpolator in track_object.getInterpolators().itervalues():
             #self._connectToInterpolator(interpolator)
         if isinstance(track_object, ges.TrackEffect):
-            self.effect_properties_tracker.addEffectElement(track_object.getElement())
+            self.effect_properties_tracker.addEffect(track_object)
 
-    def _disconnectFromTrackObject(self, track_object):
-        for prop, interpolator in track_object.getInterpolators().itervalues():
-            self._disconnectFromInterpolator(interpolator)
+    #def _disconnectFromTrackObject(self, track_object):
+        #for prop, interpolator in track_object.getInterpolators().itervalues():
+            #self._disconnectFromInterpolator(interpolator)
 
-    def _connectToInterpolator(self, interpolator):
-        interpolator.connect("keyframe-added", self._interpolatorKeyframeAddedCb)
-        interpolator.connect("keyframe-removed",
-                self._interpolatorKeyframeRemovedCb)
+    #def _connectToInterpolator(self, interpolator):
+        #interpolator.connect("keyframe-added", self._interpolatorKeyframeAddedCb)
+        #interpolator.connect("keyframe-removed",
+                #self._interpolatorKeyframeRemovedCb)
 
-        tracker = KeyframeChangeTracker()
-        tracker.connectToObject(interpolator)
-        tracker.connect("keyframe-moved", self._interpolatorKeyframeMovedCb)
-        self.interpolator_keyframe_trackers[interpolator] = tracker
+        #tracker = KeyframeChangeTracker()
+        #tracker.connectToObject(interpolator)
+        #tracker.connect("keyframe-moved", self._interpolatorKeyframeMovedCb)
+        #self.interpolator_keyframe_trackers[interpolator] = tracker
 
-    def _disconnectFromInterpolator(self, interpolator):
-        tracker = self.interpolator_keyframe_trackers.pop(interpolator)
-        tracker.disconnectFromObject(interpolator)
-        tracker.disconnect_by_func(self._interpolatorKeyframeMovedCb)
+    #def _disconnectFromInterpolator(self, interpolator):
+        #tracker = self.interpolator_keyframe_trackers.pop(interpolator)
+        #tracker.disconnectFromObject(interpolator)
+        #tracker.disconnect_by_func(self._interpolatorKeyframeMovedCb)
 
-    def _effectAddedCb(self, timeline, track_object):
-        action = self.trackEffectAddAction(timeline_object, track_object,
-                                               self.effect_properties_tracker)
+    def _effectAddedCb(self, tlobj, track_object):
+        action = self.trackEffectAddAction(tlobj, track_object,
+             self.effect_properties_tracker)
         #We use the action instead of the track object
         #because the track_object changes when redoing
-        track_object.connect("effect-added",
+        track_object.connect("notify::active",
                     self._trackObjectActiveChangedCb, action)
         self.log.push(action)
-        element = track_object.getElement()
-        if element:
-            self.effect_properties_tracker.addEffectElement(element)
+        self.effect_properties_tracker.addEffect(track_object)
 
     def _effectRemovedCb(self, timeline, track_object):
         track_object.disconnect_by_func(self._effectAddedCb)
@@ -321,6 +322,8 @@ class TimelineLogObserver(object):
                     self._timelineObjectTrackObjectAddedCb)
             tlobj.connect("track-object-removed",
                     self._timelineObjectTrackObjectRemovedCb)
+            tlobj.connect("effect-added", self._effectAddedCb)
+            tlobj.connect("effect-removed", self._effectRemovedCb)
         layer.connect("object-added", self._timelineObjectAddedCb)
         layer.connect("object-removed", self._timelineObjectRemovedCb)
 
@@ -354,9 +357,7 @@ class TimelineLogObserver(object):
             track_object.connect("active-changed",
                                  self._trackObjectActiveChangedCb, action)
             self.log.push(action)
-            element = track_object.getElement()
-            if element:
-                self.effect_properties_tracker.addEffectElement(element)
+            self.effect_properties_tracker.addEffect(track_object)
         else:
             self._connectToTrackObject(track_object)
 
@@ -367,24 +368,24 @@ class TimelineLogObserver(object):
                                                 track_object,
                                                 self.effect_properties_tracker)
             self.log.push(action)
-        else:
-            self._disconnectFromTrackObject(track_object)
+        #else:
+            #self._disconnectFromTrackObject(track_object)
 
-    def _interpolatorKeyframeAddedCb(self, track_object, keyframe):
-        action = self.interpolatorKeyframeAddedAction(track_object, keyframe)
-        self.log.push(action)
+    #def _interpolatorKeyframeAddedCb(self, track_object, keyframe):
+        #action = self.interpolatorKeyframeAddedAction(track_object, keyframe)
+        #self.log.push(action)
 
-    def _interpolatorKeyframeRemovedCb(self, track_object, keyframe,
-            old_value=None):
-        action = self.interpolatorKeyframeRemovedAction(track_object, keyframe)
-        self.log.push(action)
+    #def _interpolatorKeyframeRemovedCb(self, track_object, keyframe,
+            #old_value=None):
+        #action = self.interpolatorKeyframeRemovedAction(track_object, keyframe)
+        #self.log.push(action)
 
     def _trackObjectActiveChangedCb(self, track_object, active, add_effect_action):
         action = self.activePropertyChangedAction(add_effect_action, active)
         self.log.push(action)
 
-    def _interpolatorKeyframeMovedCb(self, tracker, track_object,
-            keyframe, old_snapshot, new_snapshot):
-        action = self.interpolatorKeyframeChangedAction(track_object,
-                keyframe, old_snapshot, new_snapshot)
-        self.log.push(action)
+    #def _interpolatorKeyframeMovedCb(self, tracker, track_object,
+            #keyframe, old_snapshot, new_snapshot):
+        #action = self.interpolatorKeyframeChangedAction(track_object,
+                #keyframe, old_snapshot, new_snapshot)
+        #self.log.push(action)

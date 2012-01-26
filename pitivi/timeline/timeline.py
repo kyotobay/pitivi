@@ -42,7 +42,7 @@ from pitivi.settings import GlobalSettings
 
 from curve import KW_LABEL_Y_OVERFLOW
 from track import TrackControls, TRACK_CONTROL_WIDTH, Track, TrackObject
-from pitivi.utils.timeline import Controller, MoveContext, SELECT, Zoomable
+from pitivi.utils.timeline import Controller, MoveContext, SELECT, Zoomable, add_effect
 
 from pitivi.dialogs.depsmanager import DepsManager
 from pitivi.dialogs.filelisterrordialog import FileListErrorDialog
@@ -830,29 +830,14 @@ class Timeline(gtk.Table, Loggable, Zoomable):
 
                 # Trying to apply effect only on the first object of the selection
                 tlobj = timeline_objs[0]
+                add_effect(tlobj, bin_desc, app)
+                self._factories = None
+                self.seeker.seek(self._position)
 
-                # Checking that this effect can be applied on this track object
-                # Which means, it has the corresponding media_type
-                for tckobj in tlobj.get_track_objects():
-                    track = tckobj.get_track()
-                    if track.props.track_type == ges.TRACK_TYPE_AUDIO and \
-                            media_type == AUDIO_EFFECT or \
-                            track.props.track_objects == ges.TRACK_TYPE_VIDEO and \
-                            media_type == VIDEO_EFFECT:
-                        #Actually add the effect
-                        self.app.action_log.begin("add effect")
-                        effect = ges.TrackParseLaunchEffect(bin_desc)
-                        tlobj.add_track_object(effect)
-                        track.add_object(effect)
-                        self.app.action_log.commit()
-                        self._factories = None
-                        self.seeker.seek(self._position)
-                        context.drop_finish(True, timestamp)
+                context.drop_finish(True, timestamp)
+                self.timeline.selection.setSelection(timeline_objs, SELECT)
 
-                        self.timeline.selection.setSelection(timeline_objs, SELECT)
-                        break
-
-            return True
+                return True
 
         return False
 
