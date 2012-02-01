@@ -32,7 +32,7 @@ class MediaLibrarySourceAddedAction(UndoableAction):
         self._undone()
 
     def do(self):
-        self.medialibrary.addDiscovererInfo(self.source)
+        self.medialibrary.addDiscovererInfo(None, self.source, None)
         self._done()
 
 
