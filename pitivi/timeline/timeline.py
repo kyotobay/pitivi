@@ -847,7 +847,7 @@ class Timeline(gtk.Table, Loggable, Zoomable):
 
                 # Trying to apply effect only on the first object of the selection
                 tlobj = timeline_objs[0]
-                add_effect(tlobj, bin_desc, app)
+                add_effect(tlobj, bin_desc, self.app)
                 self._factories = None
                 self.seeker.seek(self._position)
 

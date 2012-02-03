@@ -1164,6 +1164,8 @@ class Controller(Loggable):
 
 
 def add_effect(tlobj, bin_desc, app):
+    print app
+    print "in add_effect"
     media_type = app.effects.getFactoryFromName(bin_desc).media_type
 
     # Checking that this effect can be applied on this track object
