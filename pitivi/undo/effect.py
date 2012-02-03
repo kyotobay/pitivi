@@ -98,16 +98,20 @@ class TrackEffectAdded(UndoableAction):
     # doing again. We have to keep all EffectPropertyChanged object that refers
     # to the TrackEffect when undoing so we reset theirs gst_element when
     # doing it again. The way of doing it is the same with TrackEffectRemoved
-    def __init__(self, timeline_object, track_object, properties_watcher):
+    def __init__(self, timeline_object, instance, track_object, properties_watcher):
         self.timeline_object = timeline_object
         self.track_object = track_object
+        self.bin_desc = self.track_object.props.bin_description
         self.effect_props = []
         self.gnl_obj_props = []
+        self.app = instance
+        print self.app
+        print "in TrackEffectAdded"
         self._properties_watcher = properties_watcher
         self._props_changed = []
 
     def do(self):
-        add_effect(self.timeline_object, bin_desc, app)
+        add_effect(self.timeline_object, self.bin_desc, self.app)
         timeline = self.timeline_object.timeline
         tl_obj_track_obj = timeline.addEffectFactoryOnObject(self.factory,
                                             timeline_objects=[self.timeline_object])
