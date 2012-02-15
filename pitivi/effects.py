@@ -95,7 +95,17 @@ class Effect():
 class EffectsHandler(object):
     """
     Handles all the effects
+    The EffectsHandler is a singleton helper class, so we can call it from
+    wherever we are and use it as a database of effects.
     """
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(EffectsHandler, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+
     def __init__(self):
         object.__init__(self)
         self._pixdir = get_pixmap_dir()

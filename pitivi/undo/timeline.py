@@ -225,12 +225,11 @@ class TimelineLogObserver(object):
     interpolatorKeyframeChangedAction = InterpolatorKeyframeChanged
     activePropertyChangedAction = ActivePropertyChanged
 
-    def __init__(self, log, instance):
+    def __init__(self, log):
         self.log = log
         self.timeline_object_property_trackers = {}
         self.interpolator_keyframe_trackers = {}
         self.effect_properties_tracker = EffectGstElementPropertyChangeTracker(log)
-        self.app = instance
 
     def startObserving(self, timeline):
         self._connectToTimeline(timeline)
@@ -283,7 +282,7 @@ class TimelineLogObserver(object):
             self.effect_properties_tracker.addEffect(track_object)
 
     def _effectAddedCb(self, tlobj, track_object):
-        action = self.trackEffectAddAction(tlobj, self.app, track_object, self.effect_properties_tracker)
+        action = self.trackEffectAddAction(tlobj, track_object, self.effect_properties_tracker, self.log)
         #We use the action instead of the track object
         #because the track_object changes when redoing
         track_object.connect("notify::active",

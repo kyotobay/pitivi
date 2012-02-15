@@ -341,7 +341,9 @@ class EffectProperties(gtk.Expander, gtk.HBox):
 
             # Checking that this effect can be applied on this track object
             # Which means, it has the corresponding media_type
-            add_effect(tlobj, bin_desc, self.app)
+            self.app.action_log.begin("add effect")
+            add_effect(tlobj, bin_desc)
+            self.app.action_log.commit()
             self._updateAll()
             self._seeker.flush()
 
