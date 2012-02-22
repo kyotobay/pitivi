@@ -52,6 +52,7 @@ from pitivi.viewer import PitiviViewer
 
 from pitivi.tabsmanager import BaseTabs
 from pitivi.mediafilespreviewer import PreviewWidget
+from pitivi.dialogs.title_editor import TitleEditorDialog
 from pitivi.clipproperties import ClipProperties
 from pitivi.configure import pitivi_version, APPNAME, APPURL, \
      get_pixmap_dir, get_ui_dir
@@ -208,6 +209,10 @@ class PitiviMainWindow(gtk.Window, Loggable):
         self.app.action_log.connect("undo", self._actionLogUndo)
         self.app.action_log.connect("redo", self._actionLogRedo)
         self.app.action_log.connect("cleaned", self._actionLogCleaned)
+
+        # FIXME: temporary testing hack shit
+        foo = TitleEditorDialog(self.app)
+        foo.run()
 
     def showRenderDialog(self, project):
         """
