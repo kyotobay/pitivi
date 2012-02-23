@@ -131,6 +131,9 @@ class TitleEditorDialog(object):
         self._copy_to_dialog()
         self.window.show_all()
         response = gtk.Dialog.run(self.window)
-        self._copy_from_dialog()
+        # In the glade file, we set the OK button's response ID to 1.
+        # Cancel is 0. If the dialog is closed by some other way, we get -4.
+        if response == 1:
+            self._copy_from_dialog()
         self.window.destroy()
         return response
