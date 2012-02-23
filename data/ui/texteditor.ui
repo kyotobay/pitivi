@@ -3,6 +3,7 @@
   <requires lib="gtk+" version="2.24"/>
   <object class="GtkDialog" id="title_editor">
     <property name="can_focus">False</property>
+    <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
