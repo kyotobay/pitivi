@@ -5,6 +5,7 @@
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
+    <property name="title">Title editor</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
