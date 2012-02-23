@@ -23,6 +23,8 @@
 import gtk
 import os
 
+from gettext import gettext as _
+
 from pitivi.configure import get_ui_dir
 from pitivi.dialogs.title_editor_canvas import TitlePreview
 
@@ -52,7 +54,7 @@ class TitleEditorDialog(object):
     def __init__(self, app, **kw):
         # **kw means any extra optional keyword arguments.
         # Here, we get those properties (or fallback to a default)
-        self.text = kw.get('text', 'Hello, World!')
+        self.text = kw.get('text', _("Hello! ☃"))
         self.font = kw.get('font', 'Sans')
         self.text_size = kw.get('text_size', 64)
         self.bg_color = kw.get('bg_color', (0, 0, 0, 1))
