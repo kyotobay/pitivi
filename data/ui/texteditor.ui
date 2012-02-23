@@ -3,9 +3,9 @@
   <requires lib="gtk+" version="2.24"/>
   <object class="GtkDialog" id="title_editor">
     <property name="can_focus">False</property>
+    <property name="title">Title editor</property>
     <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
-    <property name="title">Title editor</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -16,7 +16,7 @@
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="button1">
+              <object class="GtkButton" id="cancel_button">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -31,7 +31,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button2">
+              <object class="GtkButton" id="ok_button">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -67,7 +67,7 @@
                 <property name="column_spacing">6</property>
                 <property name="row_spacing">6</property>
                 <child>
-                  <object class="GtkComboBoxText" id="comboboxtext1">
+                  <object class="GtkComboBoxText" id="text_align_combobox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <items>
@@ -153,7 +153,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkColorButton" id="colorbutton2">
+                  <object class="GtkColorButton" id="bg_color_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -169,7 +169,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkColorButton" id="colorbutton1">
+                  <object class="GtkColorButton" id="text_color_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -191,7 +191,7 @@
                     <property name="vscrollbar_policy">never</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkTextView" id="textview1">
+                      <object class="GtkTextView" id="textview">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="left_margin">6</property>
@@ -251,7 +251,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="checkbutton1">
+                      <object class="GtkCheckButton" id="center_horizontally">
                         <property name="label" translatable="yes">Horizontally</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -267,7 +267,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="checkbutton2">
+                      <object class="GtkCheckButton" id="center_vertically">
                         <property name="label" translatable="yes">Vertically</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -307,8 +307,8 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">button1</action-widget>
-      <action-widget response="0">button2</action-widget>
+      <action-widget response="0">cancel_button</action-widget>
+      <action-widget response="1">ok_button</action-widget>
     </action-widgets>
   </object>
 </interface>
