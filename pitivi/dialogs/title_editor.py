@@ -85,9 +85,9 @@ class TitleEditorDialog(object):
         # Here, we get those properties (or fallback to a default)
         self.text = kw.get('text', _("Hello! ☃"))
         self.font = kw.get('font', 'Sans')
-        self.text_size = kw.get('text_size', 64)
-        self.bg_color = kw.get('bg_color', (0, 0, 0, 1))
-        self.fg_color = kw.get('fg_color', (1, 1, 1, 1))
+        self.text_size = kw.get('text_size', 24)
+        self.fg_color = kw.get('fg_color', 4294967295)  # White by default
+        self.bg_color = kw.get('bg_color', 255)  # Black by default
         # Other default settings:
         self.x_alignment = 0.5
         self.y_alignment = 0.5
