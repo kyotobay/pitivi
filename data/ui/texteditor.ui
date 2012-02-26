@@ -67,7 +67,7 @@
                 <property name="column_spacing">6</property>
                 <property name="row_spacing">6</property>
                 <child>
-                  <object class="GtkComboBoxText" id="text_align_combobox">
+                  <object class="GtkComboBoxText" id="text_align">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <items>
