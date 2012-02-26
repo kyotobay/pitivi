@@ -118,8 +118,9 @@ class TitleEditorDialog(object):
         self.preview.props.text = text
         self.text = text
 
-    def set(self, **kw):
-        self.__dict__.update(kw)
+# FIXME: what's the point of this thing when we can set it at startup anyway?
+#    def set(self, **kw):
+#        self.__dict__.update(kw)
 
     def _fontButtonCb(self, widget):
         # Split from the end once, to separate the size from the font name
