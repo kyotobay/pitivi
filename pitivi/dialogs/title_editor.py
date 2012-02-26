@@ -57,20 +57,6 @@ def set_color(widget, value):
     widget.set_color(color)
     widget.set_alpha(alpha)
 
-def get_color(c):
-    return (
-        c.props.current_color.red_float,
-        c.props.current_color.green_float,
-        c.props.current_color.blue_float,
-        c.props.current_alpha / 65535.0)
-
-
-def set_color(c, t):
-    c.props.current_color = gtk.gdk.Color(
-        int(t[0] * 65535.0), int(t[1] * 65535.0), int(t[2] * 65535.0))
-    c.props.current_alpha = int(t[3] * 65535.0)
-
-
 # FIXME: this is not used anywhere
 #alignments = [
 #        (0.0, 0.0), (0.5, 0.0), (1.0, 0.0),
