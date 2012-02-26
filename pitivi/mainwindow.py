@@ -212,7 +212,8 @@ class PitiviMainWindow(gtk.Window, Loggable):
 
         # FIXME: temporary testing hack shit
         foo = TitleEditorDialog(self.app)
-        foo.run()
+        title_properties = foo.run()
+        print title_properties
 
     def showRenderDialog(self, project):
         """

@@ -174,10 +174,7 @@ class TitleEditorDialog(object):
         """
         raise NotImplementedError
 
-    def _copy_to_dialog(self):
-        """
-        Set the dialog's widgets to match the initial values we have
-        """
+    def _copyDefaultsToDialog(self):
         self._textbuffer.set_text(self.text)
         font_button = self.builder.get_object("font_button")
         font_button.set_font_name('%s %d' % (self.font, self.text_size))
@@ -187,12 +184,22 @@ class TitleEditorDialog(object):
         set_color(text_color_button, self.fg_color)
         set_color(bg_color_button, self.bg_color)
 
+    def getProperties(self):
+        return self.text, self.font, self.text_size,\
+                self.fg_color, self.bg_color, self.x_alignment, self.y_alignment
+
     def run(self):
+        """
+        Show the title editor dialog. If the user clicks OK, returns the list of
+        properties. Otherwise, returns None.
+        """
+        self._copyDefaultsToDialog()
         self.window.show_all()
+        data = None
         response = gtk.Dialog.run(self.window)
         # In the glade file, we set the OK button's response ID to 1.
         # Cancel is 0. If the dialog is closed by some other way, we get -4.
         if response == 1:
-            print "Save the changes"
+            data = self.getProperties()
         self.window.destroy()
-        return response
+        return data
