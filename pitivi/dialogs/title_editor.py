@@ -75,8 +75,8 @@ class TitleEditorDialog(object):
         # TODO: set preview_frame's aspect ratio
         self.preview.set_size_request(400, 300)
 
-        buffer = self.builder.get_object("textview").get_buffer()
-        buffer.connect('changed', self._buffer_changed)
+        self._textbuffer = self.builder.get_object("textview").get_buffer()
+        self._textbuffer.connect('changed', self._bufferChangedCb)
 
         # FIXME: as soon as you try to get this widget connected, you get a MRO
         #self.builder.get_object("text_align").connect(self._textAlignCb)
@@ -115,9 +115,13 @@ class TitleEditorDialog(object):
 #            self.fg_color = get_color(fg_color_selection)
 #            self.bg_color = get_color(bg_color_selection)
 
-    def _buffer_changed(self, buffer):
-        text = buffer.get_text(*buffer.get_bounds())
+    def _bufferChangedCb(self, widget):
+        """
+        When the user types in the textview, update the preview canvas.
+        """
+        text = widget.get_text(*widget.get_bounds())
         self.preview.props.text = text
+        self.text = text
 
     def set(self, **kw):
         self.__dict__.update(kw)
@@ -132,22 +136,16 @@ class TitleEditorDialog(object):
         """
         Set the dialog's widgets to match the initial values we have
         """
-        buffer = self.builder.get_object("textview").props.buffer
-        buffer.set_text(self.text)
+        self._textbuffer.set_text(self.text)
         font_button = self.builder.get_object("font_button")
         font_button.set_font_name('%s %d' % (self.font, self.text_size))
 
-    def _copy_from_dialog(self):
-        buffer = self.builder.get_object("textview").props.buffer
-        self.text = buffer.get_text(*buffer.get_bounds())
-
     def run(self):
-        self._copy_to_dialog()
         self.window.show_all()
         response = gtk.Dialog.run(self.window)
         # In the glade file, we set the OK button's response ID to 1.
         # Cancel is 0. If the dialog is closed by some other way, we get -4.
         if response == 1:
-            self._copy_from_dialog()
+            print "Save the changes"
         self.window.destroy()
         return response
