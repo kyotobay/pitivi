@@ -27,7 +27,35 @@ from gettext import gettext as _
 
 from pitivi.configure import get_ui_dir
 from pitivi.dialogs.title_editor_canvas import TitlePreview
+from pitivi.utils.ui import unpack_color, pack_color_32
 
+
+def get_color(widget):
+    """
+    Get the color values from a GTK ColorButton or ColorSelection,
+    in a 32 bit integer format.
+    """
+    # This code is based on utils/widgets.py's ColorWidget.
+    # ColorWidget is more generic, this function is really only meant to get
+    # a 32 bit integer for use with GES.
+    color = widget.get_color()
+    alpha = widget.get_alpha()
+    return pack_color_32(color.red, color.green, color.blue, alpha)
+
+
+def set_color(widget, value):
+    """
+    Set the color values of a GTK ColorButton or ColorSelection,
+    from a 32 bit integer format.
+    """
+    # This code is based on utils/widgets.py's ColorWidget.
+    # ColorWidget is more generic, it accepts all kinds of value types.
+    # This function only accepts integers.
+    value = int(value)
+    red, green, blue, alpha = unpack_color(value)
+    color = gtk.gdk.Color(red, green, blue)
+    widget.set_color(color)
+    widget.set_alpha(alpha)
 
 def get_color(c):
     return (
@@ -48,6 +76,7 @@ def set_color(c, t):
 #        (0.0, 0.0), (0.5, 0.0), (1.0, 0.0),
 #        (0.0, 0.5), (0.5, 0.5), (1.0, 0.5),
 #        (0.0, 1.0), (0.5, 1.0), (1.0, 1.0)]
+
 
 class TitleEditorDialog(object):
 
