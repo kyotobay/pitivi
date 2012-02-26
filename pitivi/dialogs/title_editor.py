@@ -115,35 +115,6 @@ class TitleEditorDialog(object):
         # FIXME: is this still needed with gtkbuilder now?
 #        del self.run
 
-#    def _run_color_dialog(self, _button):
-#        dialog = gtk.Dialog()
-#        content_area = dialog.get_content_area()
-
-#        fg_frame = gtk.Frame("Foreground color")
-#        fg_color_selection = gtk.ColorSelection()
-#        fg_color_selection.props.has_opacity_control = True
-#        set_color(fg_color_selection, self.fg_color)
-
-#        bg_frame = gtk.Frame("Background color")
-#        bg_color_selection = gtk.ColorSelection()
-#        bg_color_selection.props.has_opacity_control = True
-#        set_color(bg_color_selection, self.bg_color)
-
-#        fg_frame.add(fg_color_selection)
-#        bg_frame.add(bg_color_selection)
-#        content_area.pack_start(fg_frame, True)
-#        content_area.pack_start(bg_frame, True)
-#        dialog.add_button(gtk.STOCK_APPLY, gtk.RESPONSE_OK)
-#        dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
-
-#        dialog.show_all()
-#        response = dialog.run()
-#        dialog.destroy()
-
-#        if response == gtk.RESPONSE_OK:
-#            self.fg_color = get_color(fg_color_selection)
-#            self.bg_color = get_color(bg_color_selection)
-
     def _bufferChangedCb(self, widget):
         """
         When the user types in the textview, update the preview canvas.
