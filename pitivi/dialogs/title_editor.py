@@ -129,8 +129,13 @@ class TitleEditorDialog(object):
         # TODO: set self.preview's properties accordingly
 
     def _copy_to_dialog(self):
+        """
+        Set the dialog's widgets to match the initial values we have
+        """
         buffer = self.builder.get_object("textview").props.buffer
         buffer.set_text(self.text)
+        font_button = self.builder.get_object("font_button")
+        font_button.set_font_name('%s %d' % (self.font, self.text_size))
 
     def _copy_from_dialog(self):
         buffer = self.builder.get_object("textview").props.buffer
