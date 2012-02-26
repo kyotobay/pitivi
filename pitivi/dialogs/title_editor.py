@@ -78,6 +78,9 @@ class TitleEditorDialog(object):
         buffer = self.builder.get_object("textview").get_buffer()
         buffer.connect('changed', self._buffer_changed)
 
+        # FIXME: as soon as you try to get this widget connected, you get a MRO
+        #self.builder.get_object("text_align").connect(self._textAlignCb)
+
         # Hack: GladeWindow hides TitleEditDialog's run() with gtk.Dialog's;
         # undo that.
         # FIXME: is this still needed with gtkbuilder now?
