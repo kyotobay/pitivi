@@ -132,6 +132,13 @@ class TitleEditorDialog(object):
         self.font, self.text_size = font_string[0], int(font_string[1])
         # TODO: set self.preview's properties accordingly
 
+    def _textAlignCb(self, widget):
+        """
+        This should set the text alignment type (left, center, right) within
+        the text box, if possible and if supported by GStreamer.
+        """
+        raise NotImplementedError
+
     def _copy_to_dialog(self):
         """
         Set the dialog's widgets to match the initial values we have
