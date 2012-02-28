@@ -284,6 +284,8 @@ class EffectProperties(gtk.Expander, gtk.HBox):
         for timeline_object in self.timeline_objects:
             timeline_object.disconnect_by_func(self._trackObjectAddedCb)
             timeline_object.disconnect_by_func(self._trackRemovedRemovedCb)
+            timeline_object.disconnect_by_func(self._trackEffectAddedCb)
+            timeline_object.disconnect_by_func(self._trackEffectRemovedCb)
 
         self.selected_effects = selection.getSelectedTrackEffects()
 
@@ -292,6 +294,8 @@ class EffectProperties(gtk.Expander, gtk.HBox):
             for timeline_object in self.timeline_objects:
                 timeline_object.connect("track-object-added", self._trackObjectAddedCb)
                 timeline_object.connect("track-object-removed", self._trackRemovedRemovedCb)
+                timeline_object.connect("effect-added", self._trackEffectAddedCb)
+                timeline_object.connect("effect-removed", self._trackEffectRemovedCb)
             self.set_sensitive(True)
         else:
             self.timeline_objects = []
@@ -305,6 +309,18 @@ class EffectProperties(gtk.Expander, gtk.HBox):
             self._updateAll()
 
     def  _trackRemovedRemovedCb(self, unused_timeline_object, track_object):
+        if isinstance(track_object, ges.TrackEffect):
+            selec = self.timeline.selection.getSelectedTrackEffects()
+            self.selected_effects = selec
+            self._updateAll()
+
+    def  _trackEffectAddedCb(self, unused_timeline_object, track_object):
+        if isinstance(track_object, ges.TrackEffect):
+            selec = self.timeline.selection.getSelectedTrackEffects()
+            self.selected_effects = selec
+            self._updateAll()
+
+    def  _trackEffectRemovedCb(self, unused_timeline_object, track_object):
         if isinstance(track_object, ges.TrackEffect):
             selec = self.timeline.selection.getSelectedTrackEffects()
             self.selected_effects = selec
