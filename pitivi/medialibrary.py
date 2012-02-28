@@ -723,7 +723,7 @@ class MediaLibraryWidget(gtk.VBox, Loggable):
         self._importDialog.set_preview_widget(pw)
         self._importDialog.set_use_preview_label(False)
         self._importDialog.connect('update-preview', pw.add_preview_request)
-        self._importDialog.set_current_folder(self.app.settings.lastImportFolder)
+        self._importDialog.set_filename(dialogtitle)
 
         self._importDialog.connect('response', self._dialogBoxResponseCb, select_folders)
         self._importDialog.connect('close', self._dialogBoxCloseCb)
