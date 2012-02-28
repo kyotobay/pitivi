@@ -1282,7 +1282,7 @@ class Timeline(gtk.Table, Loggable, Zoomable):
         for obj in selected:
             keyframe_exists = False
 
-            position_in_obj = (timeline_position - obj.start) + obj.in_point
+            position_in_obj = (self_position - obj.start) + obj.in_point
             interpolators = obj.getInterpolators()
             for value in interpolators:
                 interpolator = obj.getInterpolator(value)

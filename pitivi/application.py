@@ -199,7 +199,7 @@ class Pitivi(Loggable, Signallable):
         return self.emit("closing-project", project)
 
     def _projectManagerProjectClosed(self, projectManager, project):
-        #self.timelineLogObserver.stopObserving(project.timeline)
+        self.timelineLogObserver.stopObserving(project.timeline)
         self.projectLogObserver.stopObserving(project)
         self.current = None
         self.emit("project-closed", project)
