@@ -82,7 +82,7 @@ class EffectGstElementPropertyChangeTracker:
 
         return prop_changed
 
-    def _propertyChangedCb(self, tckobj, gst_element, pspec, unused):
+    def _propertyChangedCb(self, gst_element, pspec, unused):
         old_value = self._tracked_effects[tckobj][pspec.name]
         new_value = gst_element.get_property(pspec.name)
         action = EffectPropertyChanged(tckobj, pspec.name, old_value,
@@ -154,7 +154,6 @@ class TrackEffectRemoved(UndoableAction):
     def __init__(self, timeline_object, track_object, properties_watcher):
         self.track_object = track_object
         self.timeline_object = timeline_object
-        self.factory = track_object.factory
         self.effect_props = []
         self.gnl_obj_props = []
         self._properties_watcher = properties_watcher

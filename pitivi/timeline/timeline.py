@@ -1262,7 +1262,7 @@ class Timeline(gtk.Table, Loggable, Zoomable):
         selected = self.timeline.selection.getSelectedTrackObjs()
         for obj in selected:
             keyframe_exists = False
-            position_in_obj = (self._position - obj.start) + obj.in_point
+            position_in_obj = (self._position - obj.get_start()) + obj.get_in_point()
             interpolators = obj.getInterpolators()
             for value in interpolators:
                 interpolator = obj.getInterpolator(value)

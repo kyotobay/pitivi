@@ -350,7 +350,6 @@ class EffectProperties(gtk.Expander, gtk.HBox):
 
     def addEffectToCurrentSelection(self, bin_desc):
         if self.timeline_objects:
-            media_type = self.app.effects.getFactoryFromName(bin_desc).media_type
 
             # Trying to apply effect only on the first object of the selection
             tlobj = self.timeline_objects[0]
@@ -370,7 +369,9 @@ class EffectProperties(gtk.Expander, gtk.HBox):
     def _dragDropCb(self, unused, context, unused_x, unused_y,
              unused_timestamp):
         if self._factory:
+            self.app.action_log.begin("add effect")
             self.addEffectToCurrentSelection(self._factory.effectname)
+            self.app.action_log.commit()
         self._factory = None
 
     def _dragLeaveCb(self, unused_layout, unused_context, unused_tstamp):
@@ -654,9 +655,9 @@ class TransformationProperties(gtk.Expander):
                 self._current_tl_obj = None
                 self.zoom_scale.set_value(1.0)
                 self._seeker.flush()
-            self.effect = None
-            self.set_sensitive(False)
-        self._updateBoxVisibility()
+                self.effect = None
+                self.set_sensitive(False)
+            self._updateBoxVisibility()
 
     def _updateBoxVisibility(self):
         if self.get_expanded() and self._current_tl_obj:
