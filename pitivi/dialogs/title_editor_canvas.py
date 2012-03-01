@@ -139,6 +139,10 @@ class TitlePreview(gtk.EventBox):
             raise AttributeError
 
     def do_set_property(self, property, value):
+        # Use if clauses with "hasattr" to ensure that the property we're trying
+        # to set really has a target object to receive it. This is necessary
+        # because do_set_property may be called multiple times before the
+        # canvas' widgets are even created.
         if property.name == 'text':
             self.text = value
             if hasattr(self, 'text_item'):
@@ -162,13 +166,11 @@ class TitlePreview(gtk.EventBox):
             if hasattr(self, 'text_item'):
                 self.text_item.props.alignment = value
         elif property.name == "foreground-color":
-            pass
-            #FIXME Y U NO WORK?
-            #self.text_item.props.fill_color_rgba = value
+            if hasattr(self, "text_item"):
+                self.text_item.props.fill_color_rgba = value
         elif property.name == "background-color":
-            pass
-            #FIXME Y U NO WORK?
-            #self.canvas.props.background_color = value
+            if hasattr(self, "canvas"):
+                self.canvas.props.background_color = value
         else:
             raise AttributeError(property.name)
 
