@@ -49,7 +49,7 @@ class TitlePreview(gtk.EventBox):
 
     __gproperties__ = {
         'text': (
-            gobject.TYPE_STRING, 'text', 'text', _('Hello'),
+            gobject.TYPE_STRING, 'text', 'text', ('Hello'),
             gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
         'x': (
             gobject.TYPE_UINT, 'x position', 'x position', 0, 0xffff, 10,
