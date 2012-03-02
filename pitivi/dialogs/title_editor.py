@@ -110,6 +110,7 @@ class TitleEditorDialog(object):
     def _fontButtonCb(self, widget):
         self.font = widget.get_font_name()
         self.preview.text_item.props.font = self.font
+        self.preview.updateTextFrame()
 
     def _textColorButtonCb(self, widget):
         self.fg_color = get_color(widget)
@@ -134,6 +135,7 @@ class TitleEditorDialog(object):
         font_button = self.builder.get_object("font_button")
         font_button.set_font_name(self.font)
         self.preview.text_item.props.font = self.font
+        self.preview.updateTextFrame()
 
         # Set the color buttons' colors
         text_color_button = self.builder.get_object("text_color_button")
