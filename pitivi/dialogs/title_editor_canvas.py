@@ -60,14 +60,6 @@ class TitlePreview(gtk.EventBox):
         'alignment': (
             gobject.TYPE_UINT, 'alignment', 'alignment', 0, 2, 0,
             gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
-        'foreground-color': (
-            gobject.TYPE_UINT, 'foreground color', 'foreground color',
-            0, 0xffffffff, 0xffffffff,
-            gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
-        'background-color': (
-            gobject.TYPE_UINT, 'background color', 'background color',
-            0, 0xffffffff, 0,
-            gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
     }
 
     def __init__(self, **kw):
@@ -168,12 +160,6 @@ class TitlePreview(gtk.EventBox):
             self.alignment = value
             if hasattr(self, 'text_item'):
                 self.text_item.props.alignment = value
-        elif property.name == "foreground-color":
-            if hasattr(self, "text_item"):
-                self.text_item.props.fill_color_rgba = value
-        elif property.name == "background-color":
-            if hasattr(self, "canvas"):
-                self.canvas.props.background_color = value
         else:
             raise AttributeError(property.name)
 
