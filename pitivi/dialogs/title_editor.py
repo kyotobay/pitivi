@@ -112,7 +112,6 @@ class TitleEditorDialog(object):
         # Split from the end once, to separate the size from the font name
         font_string = widget.get_font_name().rsplit(None, 1)
         self.font, self.text_size = font_string[0], int(font_string[1])
-        # TODO: set self.preview's properties accordingly
 
     def _textColorButtonCb(self, widget):
         self.fg_color = get_color(widget)
