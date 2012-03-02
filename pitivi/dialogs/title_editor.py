@@ -115,9 +115,14 @@ class TitleEditorDialog(object):
 
     def _textColorButtonCb(self, widget):
         self.fg_color = get_color(widget)
+        self.preview.text_item.props.fill_color_rgba = self.fg_color
 
     def _bgColorButtonCb(self, widget):
         self.bg_color = get_color(widget)
+        # goocanvas.text uses a guint32 color...
+        # while goocanvas.canvas uses a hex color. Jeez.
+        bg_color_hex = widget.get_color()
+        self.preview.canvas.props.background_color = bg_color_hex
 
     def _textAlignCb(self, widget):
         """
@@ -131,10 +136,18 @@ class TitleEditorDialog(object):
         font_button = self.builder.get_object("font_button")
         font_button.set_font_name('%s %d' % (self.font, self.text_size))
 
+        # Set the color buttons' colors
         text_color_button = self.builder.get_object("text_color_button")
         bg_color_button = self.builder.get_object("bg_color_button")
         set_color(text_color_button, self.fg_color)
         set_color(bg_color_button, self.bg_color)
+
+        # Set the canvas colors
+        # goocanvas.text uses a guint32 color...
+        # while goocanvas.canvas uses a hex color. Jeez.
+        bg_color_hex = bg_color_button.get_color()
+        self.preview.canvas.props.background_color = bg_color_hex
+        self.preview.text_item.props.fill_color_rgba = self.fg_color
 
     def getProperties(self):
         return self.text, self.font, self.text_size,\
