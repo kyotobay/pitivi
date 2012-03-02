@@ -83,20 +83,20 @@ class TitlePreview(gtk.EventBox):
             font='Sans Bold 24',
             text=self.text)
 
-        text_w, text_h = text_size(self.text_item)
-
         # TODO: Ideally we'd invert the colour underneath the outline.
+        # The width and height don't need to be calculated here;
+        # the "text" property being set will trigger the updateTextFrame method
         self.rect1 = goocanvas.Rect(
             stroke_color_rgba=0xffffffff,
-            width=text_w + 2 * self.PADDING,
-            height=text_h + 2 * self.PADDING,
+            width=0,
+            height=0,
             radius_x=0,
             radius_y=0)
         self.rect2 = goocanvas.Rect(
             stroke_color_rgba=0x000000ff,
             line_dash=goocanvas.LineDash([3.0, 3.0]),
-            width=text_w + 2 * self.PADDING,
-            height=text_h + 2 * self.PADDING,
+            width=0,
+            height=0,
             radius_x=0,
             radius_y=0)
 
