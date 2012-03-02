@@ -83,8 +83,7 @@ class TitleEditorDialog(object):
 
         self.window = self.builder.get_object("title_editor")
         self.preview_frame = self.builder.get_object("preview_frame")
-
-        self.preview = TitlePreview(text=self.text)
+        self.preview = TitlePreview()
         self.preview_frame.add(self.preview)
         # TODO: set preview_frame's aspect ratio
         self.preview.set_size_request(400, 300)
