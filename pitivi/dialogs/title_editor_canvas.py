@@ -141,14 +141,8 @@ class TitlePreview(gtk.EventBox):
         if property.name == 'text':
             self.text = value
             if hasattr(self, 'text_item'):
-#                text_w0, text_h0 = text_size(self.text_item)  # FIXME: this is unused
                 self.text_item.props.text = value
-                text_w1, text_h1 = text_size(self.text_item)
-                # Update rectangle sizes to match text.
-                self.rect1.props.width = text_w1 + 2 * self.PADDING
-                self.rect1.props.height = text_h1 + 2 * self.PADDING
-                self.rect2.props.width = text_w1 + 2 * self.PADDING
-                self.rect2.props.height = text_h1 + 2 * self.PADDING
+                self.updateTextFrame()
                 self.update_position(0, 0)
         elif property.name == 'x':
             # TODO: sync to canvas items
@@ -187,6 +181,16 @@ class TitlePreview(gtk.EventBox):
         self.update_position(dx, dy)
         self.last_x = event.x
         self.last_y = event.y
+
+    def updateTextFrame(self):
+        """
+        Update rectangle sizes to match text.
+        """
+        text_w, text_h = text_size(self.text_item)
+        self.rect1.props.width = text_w + 2 * self.PADDING
+        self.rect1.props.height = text_h + 2 * self.PADDING
+        self.rect2.props.width = text_w + 2 * self.PADDING
+        self.rect2.props.height = text_h + 2 * self.PADDING
 
     def update_position(self, dx, dy):
         #print 'before', (dx, dy)
