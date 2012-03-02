@@ -70,8 +70,7 @@ class TitleEditorDialog(object):
         # **kw means any extra optional keyword arguments.
         # Here, we get those properties (or fallback to a default)
         self.text = kw.get('text', _("Hello! ☃"))
-        self.font = kw.get('font', 'Sans')
-        self.text_size = kw.get('text_size', 24)
+        self.font = kw.get('font', 'Sans 24')
         self.fg_color = kw.get('fg_color', 4294967295)  # White by default
         self.bg_color = kw.get('bg_color', 255)  # Black by default
         # Other default settings:
@@ -109,9 +108,8 @@ class TitleEditorDialog(object):
 #        self.__dict__.update(kw)
 
     def _fontButtonCb(self, widget):
-        # Split from the end once, to separate the size from the font name
-        font_string = widget.get_font_name().rsplit(None, 1)
-        self.font, self.text_size = font_string[0], int(font_string[1])
+        self.font = widget.get_font_name()
+        self.preview.text_item.props.font = self.font
 
     def _textColorButtonCb(self, widget):
         self.fg_color = get_color(widget)
@@ -134,7 +132,8 @@ class TitleEditorDialog(object):
     def _copyDefaultsToDialog(self):
         self._textbuffer.set_text(self.text)
         font_button = self.builder.get_object("font_button")
-        font_button.set_font_name('%s %d' % (self.font, self.text_size))
+        font_button.set_font_name(self.font)
+        self.preview.text_item.props.font = self.font
 
         # Set the color buttons' colors
         text_color_button = self.builder.get_object("text_color_button")
@@ -150,7 +149,7 @@ class TitleEditorDialog(object):
         self.preview.text_item.props.fill_color_rgba = self.fg_color
 
     def getProperties(self):
-        return self.text, self.font, self.text_size,\
+        return self.text, self.font,\
                 self.fg_color, self.bg_color, self.x_alignment, self.y_alignment
 
     def run(self):
