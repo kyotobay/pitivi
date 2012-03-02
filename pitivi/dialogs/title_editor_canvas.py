@@ -141,7 +141,7 @@ class TitlePreview(gtk.EventBox):
         if property.name == 'text':
             self.text = value
             if hasattr(self, 'text_item'):
-#                text_w0, text_h0 = text_size(self.text_item) # FIXME: sert à rien cette ligne!
+#                text_w0, text_h0 = text_size(self.text_item)  # FIXME: this is unused
                 self.text_item.props.text = value
                 text_w1, text_h1 = text_size(self.text_item)
                 # Update rectangle sizes to match text.
