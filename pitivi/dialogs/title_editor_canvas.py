@@ -24,7 +24,8 @@
 # TODO: set cursor to indicate draggability when over text item
 # TODO: allow centering the text horizontally and vertically
 # TODO: maintain right margin position when text is right aligned
-# TODO: resize the text when the aspectframe/canvas is resized
+# TODO: resize the text according to the scale % of the canvas (vs project resolution)
+# TODO: calculate the canvas aspect ratio from project settings
 
 import gobject
 import goocanvas

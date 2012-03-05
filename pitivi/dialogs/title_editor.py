@@ -20,6 +20,11 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+# TODO: fix the alignment ComboBoxText widget
+# TODO: convert the box alignment checkboxes by normal buttons
+# TODO: consider making this an embeddable tab, and put the preview directly onto the viewer (like the transform tool)
+# TODO: replace this gobject property madness by a pythonic property system
+
 import gtk
 import os
 
@@ -85,8 +90,8 @@ class TitleEditorDialog(object):
         self.preview_frame = self.builder.get_object("preview_frame")
         self.preview = TitlePreview()
         self.preview_frame.add(self.preview)
-        # TODO: set preview_frame's aspect ratio
         self.preview.set_size_request(400, 300)
+        # TODO: set preview_frame's aspect ratio from project settings
 
         self._textbuffer = self.builder.get_object("textview").get_buffer()
         self._textbuffer.connect('changed', self._bufferChangedCb)
