@@ -262,8 +262,9 @@ class TimelineLogObserver(object):
         tracker = TimelineObjectPropertyChangeTracker()
         tracker.connectToObject(timeline_object)
         for property_name in tracker.property_names:
-            tracker.connect("notify::" + property_name,
-                    self._timelineObjectPropertyChangedCb, property_name)
+            old_value = timeline_object.get_property(property_name)
+            timeline_object.connect("notify::" + property_name,
+                    self._timelineObjectPropertyChangedCb, old_value, property_name)
         self.timeline_object_property_trackers[timeline_object] = tracker
 
         timeline_object.connect("track-object-added", self._timelineObjectTrackObjectAddedCb)
@@ -319,8 +320,9 @@ class TimelineLogObserver(object):
         action = self.timelineObjectRemovedAction(timeline, timeline_object)
         self.log.push(action)
 
-    def _timelineObjectPropertyChangedCb(self, tracker, timeline_object,
-            old_value, new_value, property_name):
+    def _timelineObjectPropertyChangedCb(self, timeline_object, tracker,
+            old_value, property_name):
+        new_value = timeline_object.get_property(property_name)
         action = self.timelinePropertyChangedAction(timeline_object,
                 property_name, old_value, new_value)
         self.log.push(action)
